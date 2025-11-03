@@ -1,0 +1,178 @@
+{
+ "nbformat": 4,
+ "nbformat_minor": 0,
+ "metadata": {
+  "colab": {
+   "provenance": [],
+   "authorship_tag": "ABX9TyPE3lHa+B34d14oUiajmxGm"
+  },
+  "kernelspec": {
+   "name": "python3",
+   "display_name": "Python 3"
+  },
+  "language_info": {
+   "name": "python"
+  },
+  "widgets": {
+   "state": {}
+  }
+ },
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "source": [
+    "ASK 1: Language Translation Tool\n",
+    "● Create a user interface where user can enter text and select source & target languages.\n",
+    "● Use a translation API like Google Translate API or Microsoft Translator to process the input.\n",
+    "● Send the text to the API and get the translated response.\n",
+    "● Display the translated text clearly on the screen.\n",
+    "● Optional: Add a copy button or text-to-speech feature for better usability."
+   ],
+   "metadata": {
+    "id": "TXPX0nsmYs93"
+   }
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "colab": {
+     "base_uri": "https://localhost:8080/",
+     "height": 446,
+     "referenced_widgets": [
+      "11a24aa1d0464d6092d8c04729d2086e",
+      "b7f98ce93aa648f2960d246e44d05a86",
+      "2f71b1cd1b174469ba52c64a22c538b5",
+      "4b0ec476785b44aab962e7751e281d03",
+      "2294a83ed7a94dc0b824beec7cb4492b",
+      "c553d7423a754d12b30e9c8dae195a92",
+      "6db18620767f4474a5c2af9fd87f6bc0",
+      "82e955f9f22847deb5d77779b2c79f49",
+      "ffb5d810acf14b63af7b0f850d19adfc",
+      "be38e0e570034c7eabf98f6b2e478879",
+      "6516c35aa37946b5b7b06209e56b26e5",
+      "262a583ea6954a84bdd367795077cb6d",
+      "1bb0d9ae94a1472cb99f53bba2ac43f1",
+      "e1d607d6962a47e8b988c8aecae58a19",
+      "74bc4a97271b487bb73af4b1834e8241",
+      "4c0e0a002aeb4f26aeedb745d4bb4d24",
+      "9237ad7c9a2b4e66a57a00de6e6be024",
+      "39cf99e0af0e46ba8efcc91b7eb47344",
+      "f06e2eef0cb7425d85467cad47e8ebb9",
+      "7f4db47c303b480286b736a44767d916",
+      "c7e6da8f280c4afab6b578b45ca1a204",
+      "0111766db88e438ab5e2021e9f0f9d12",
+      "39faff47975e41e1a2cbcfdb0339f9db",
+      "230d3ef7b3c34c43ab8e4984ffc99c7f"
+     ]
+    },
+    "id": "FLgRKRx_MydI",
+    "executionInfo": {
+     "status": "ok",
+     "timestamp": 1761913578622,
+     "user_tz": -330,
+     "elapsed": 6771,
+     "user": {
+      "displayName": "Siddesh Demse",
+      "userId": "05906698807341512131"
+     }
+    },
+    "outputId": "4a96df77-3e17-4ca2-ced1-00a24dda0dfb"
+   },
+   "outputs": [
+    {
+     "output_type": "display_data",
+     "data": {
+      "text/plain": [
+       "VBox(children=(Dropdown(description='Source:', options=(('Auto', 'auto'), ('Afrikaans', 'af'), ('Albanian', 's…"
+      ],
+      "application/vnd.jupyter.widget-view+json": {
+       "version_major": 2,
+       "version_minor": 0,
+       "model_id": "11a24aa1d0464d6092d8c04729d2086e"
+      }
+     },
+     "metadata": {}
+    }
+   ],
+   "source": [
+    "# 1) Install required libs\n",
+    "!pip install -q googletrans==4.0.0-rc1 ipywidgets gTTS\n",
+    "\n",
+    "# 2) Imports\n",
+    "from googletrans import Translator, LANGUAGES\n",
+    "from ipywidgets import Textarea, Dropdown, Button, HBox, VBox, Label, Output\n",
+    "from IPython.display import display, Audio, clear_output\n",
+    "from gtts import gTTS\n",
+    "import io\n",
+    "\n",
+    "# 3) Build UI\n",
+    "translator = Translator()\n",
+    "\n",
+    "languages = {k:v for k,v in LANGUAGES.items()}  # language code -> name\n",
+    "# build options for dropdown (code: name)\n",
+    "options = [(name.capitalize(), code) for code,name in languages.items()]\n",
+    "\n",
+    "src_dropdown = Dropdown(options=[('Auto', 'auto')] + options, value='auto', description='Source:')\n",
+    "tgt_dropdown = Dropdown(options=options, value='en', description='Target:')\n",
+    "input_box = Textarea(value='Hello, how are you?', description='Text:', layout={'width':'600px','height':'120px'})\n",
+    "translate_btn = Button(description='Translate', button_style='success')\n",
+    "tts_btn = Button(description='Play TTS', button_style='info')\n",
+    "copy_btn = Button(description='Copy', button_style='')\n",
+    "\n",
+    "out = Output()\n",
+    "\n",
+    "def do_translate(_):\n",
+    "    with out:\n",
+    "        clear_output()\n",
+    "        text = input_box.value.strip()\n",
+    "        if not text:\n",
+    "            print(\"Enter text to translate.\")\n",
+    "            return\n",
+    "        src = src_dropdown.value\n",
+    "        tgt = tgt_dropdown.value\n",
+    "        print(f\"Source language: {src}, Target language: {tgt}\") # Added for debugging\n",
+    "        try:\n",
+    "            res = translator.translate(text, src=src, dest=tgt)\n",
+    "            print(\"Original (detected):\", res.src, \"\\nOriginal text:\", res.origin)\n",
+    "            print(\"\\nTranslated text:\", res.text)\n",
+    "            # store for TTS\n",
+    "            out.last_translation = res.text\n",
+    "            out.last_lang = res.dest\n",
+    "        except Exception as e:\n",
+    "            print(\"Translation error:\", e)\n",
+    "\n",
+    "def play_tts(_):\n",
+    "    with out:\n",
+    "        if not hasattr(out, 'last_translation'):\n",
+    "            print(\"Translate first.\")\n",
+    "            return\n",
+    "        tts = gTTS(text=out.last_translation, lang=out.last_lang)\n",
+    "        bio = io.BytesIO()\n",
+    "        tts.write_to_fp(bio)\n",
+    "        bio.seek(0)\n",
+    "        display(Audio(bio.read(), autoplay=True))\n",
+    "\n",
+    "def copy_text(_):\n",
+    "    # copy to clipboard is limited in notebooks; provide easy print to allow manual copy\n",
+    "    with out:\n",
+    "        if not hasattr(out, 'last_translation'):\n",
+    "            print(\"Translate first.\")\n",
+    "            return\n",
+    "        print(\"\\n=== Copy below ===\\n\")\n",
+    "        print(out.last_translation)\n",
+    "\n",
+    "translate_btn.on_click(do_translate)\n",
+    "tts_btn.on_click(play_tts)\n",
+    "copy_btn.on_click(copy_text)\n",
+    "\n",
+    "ui = VBox([src_dropdown, tgt_dropdown, input_box, HBox([translate_btn, tts_btn, copy_btn]), out])\n",
+    "display(ui)\n",
+    "\n",
+    "# Notes:\n",
+    "# - googletrans is unofficial and may break if Google changes endpoints.\n",
+    "# - For production, use Google Cloud Translate API or Microsoft Translator (see skeleton below)."
+   ]
+  }
+ ]
+}

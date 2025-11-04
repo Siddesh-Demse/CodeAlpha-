@@ -21,6 +21,7 @@ Table of Contents:
 To build an AI-powered text translation system that allows users to input text in one language and translate it into another language using NLP models or Google Translate API.
 
 🧠 Technologies Used
+
 •Python
 •googletrans library (Google Translate unofficial API)
 •ipywidgets for GUI
@@ -28,12 +29,14 @@ To build an AI-powered text translation system that allows users to input text i
 
 
 ⚙️ Implementation
+
 •User inputs text and selects source/target languages.
 •The system translates text using the Google Translate API.
 •Optional: Converts translated text to speech and allows copying.
 
 
 🧩 Features
+
 •Auto language detection
 •Translation between 100+ languages
 •Audio playback using text-to-speech
@@ -41,6 +44,7 @@ To build an AI-powered text translation system that allows users to input text i
 
 
 📄 Example Output
+
 Input: Hello, how are you?
 Translated (English → French): Bonjour, comment ça va ?
 
@@ -53,6 +57,7 @@ Translated (English → French): Bonjour, comment ça va ?
 To develop a rule-based and NLP-powered chatbot that can answer Frequently Asked Questions (FAQs) using semantic matching and text processing.
 
 🧠 Technologies Used
+
 •Python
 •pandas, scikit-learn (TF-IDF & Cosine Similarity)
 •sentence-transformers (optional: semantic embeddings)
@@ -60,6 +65,7 @@ To develop a rule-based and NLP-powered chatbot that can answer Frequently Asked
 
 
 ⚙️ Implementation
+
 •FAQ dataset stored in CSV format (question, answer).
 •Texts are cleaned and vectorized using TF-IDF or embeddings.
 •Cosine similarity identifies the most relevant answer.
@@ -67,6 +73,7 @@ To develop a rule-based and NLP-powered chatbot that can answer Frequently Asked
 
 
 🧩 Features
+
 •Responds to questions semantically similar to stored FAQs
 •Learns from additional FAQs dynamically
 •Supports fallback response for unmatched queries
@@ -86,6 +93,7 @@ Bot: Use the 'Forgot Password' link on the login page and follow the instruction
 To train an LSTM-based neural network to generate new musical compositions using the Lakh MIDI Dataset (Clean).
 
 🧠 Technologies Used
+
 •TensorFlow / Keras
 •music21 and pretty_midi for MIDI processing
 •numpy, tqdm, matplotlib
@@ -93,6 +101,7 @@ To train an LSTM-based neural network to generate new musical compositions using
 
 
 ⚙️ Implementation Steps
+
 1. Dataset Loading — unzip and parse MIDI files.
 2. Preprocessing — convert notes/chords/rests into token sequences.
 3. Model Training — LSTM learns the next note prediction.
@@ -101,6 +110,7 @@ To train an LSTM-based neural network to generate new musical compositions using
 
 
 🧩 Features
+
 •Generates original musical sequences
 •Supports variable sequence length and vocabulary size
 •Uses embeddings + stacked LSTM layers for sequential learning
@@ -115,6 +125,7 @@ Output: generated_from_lakh.mid (AI-generated music file)
 
 
 ⚙️ Project Requirements
+
 •Python:3.10+
 •TensorFlow:2.12.0
 •scikit-learn:latest
@@ -125,6 +136,7 @@ Output: generated_from_lakh.mid (AI-generated music file)
 
 
 🔮 Future Enhancements
+
 •Language Translation: Integrate with official Google Cloud or Microsoft Translator APIs for enterprise accuracy.
 •Chatbot: Deploy using Flask or Streamlit for a web-based user interface.
 •Music Generation: Fine-tune with Transformers (Music Transformer, MuseNet) for higher-quality compositions.
@@ -132,6 +144,7 @@ Output: generated_from_lakh.mid (AI-generated music file)
 
 
 📚 References
+
 •Googletrans Library
 •Scikit-learn Documentation
 •Lakh MIDI Dataset
@@ -143,5 +156,6 @@ Output: generated_from_lakh.mid (AI-generated music file)
 🏁 Author
 
 Siddesh B. Demse
+
 Artificial Intelligence & Data Science (AIDS)
 SPPU | CodeAlpha AI Internship (2025)
